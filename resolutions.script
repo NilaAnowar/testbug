@@ -1,0 +1,58 @@
+﻿# TO RUN SCRIPT: Use _Android_Master.script in _Android.suite
+
+launch.GoogleMaps
+
+try 
+	
+	resolutions_test
+	
+catch
+	set recovered to true
+	recover.attention
+	if readtext(the SearchRectangle) contains "eggsensor"
+		tap "toggle_switch", (image:"toggle_switch",scale: 0.5 to 3 by .25)
+		wait 1 second
+		typetext backbutton
+		wait 2 second
+	else
+		set recovered to false
+		logerror "Resolutions DID NOT work."
+	end if
+	
+	if recovered is true
+		resolutions_test
+	end if
+	
+end try
+
+to resolutions_test
+
+	SetDeviceOrientation portrait
+	SetDeviceOrientation portrait
+	wait 5 seconds
+	set portrait_coordinates to RemoteScreenSize()
+	log "Portrait Coordinates:" && portrait_coordinates
+	SetDeviceOrientation landscapeleft
+	SetDeviceOrientation landscapeleft
+	wait 5 seconds
+	set landscape_coordinates to RemoteScreenSize()
+	log "Landscape Coordinates:" && landscape_coordinates
+	
+	if portrait_coordinates.x is equal to landscape_coordinates.y and portrait_coordinates.y is equal to landscape_coordinates.x
+		logsuccess "Resolutions Are Correct"
+	else
+		logwarning "Portrait X:" && portrait_coordinates.x
+		logwarning "Portrait Y:" && portrait_coordinates.y
+		logwarning "Landscape X:" && landscape_coordinates.x
+		logwarning "Landscape Y:" && landscape_coordinates.y
+		logerror "Resolutions DID NOT work."
+	end if
+	
+end resolutions_test
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+﻿wd.init     -- Initialize Everything
+wd.connectWD(global APIDemos)         -- launch app API Demos
+click webAccessibilityID: "Accessibility"
+If findElement(webAccessibilityID: "Custom View").text equals "Custom View"  then 
+	LogSuccess "Element was verified."
+else
+	LogWarning "Element was not verified."
+end If
+ADBCallRemote(!"-s [[sutinfo().serial]] shell input keyevent KEYCODE_BACK")
+wait 5 seconds
+Click webAccessibilityID: "Animation"
+If findElement(webAccessibilityID: "Default Layout Animations").text equals "Default Layout Animations" 
+	LogSuccess "Element was verified."
+else
+	LogError "Element was not verified."
+end If
+ADBCallRemote(!"-s [[sutinfo().serial]] shell input keyevent KEYCODE_BACK")
+wait 2 seconds
+wd.reset

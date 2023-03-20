@@ -1,0 +1,31 @@
+﻿wd.init      -- Initialize Everything
+wd.connectWD(global APIDemos)         -- launch app API Demos
+
+Click webAccessibilityID: "Views"
+Click webAccessibilityID: "Drag and Drop"
+
+put findElement(webxpath: "/hierarchy/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.RelativeLayout/android.view.View[3]").rectangle into rec3
+log rec3
+put findElement(webxpath: "/hierarchy/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.RelativeLayout/android.view.View[2]").rectangle into rec2
+
+log rec2
+put (item 1 of rec3 + item 3 of rec3)/2 into x1
+put (item 2 of rec3 + item 4 of rec3)/2 into y1
+log x1, y1
+put (item 1 of rec2 + item 3 of rec2)/2 into x2
+put (item 2 of rec2 + item 4 of rec2)/2 into y2
+log x2, y2
+
+touchAction ([(longPress: (x: x1, y: y1)), (moveTo: (x: x2, y: y2))])
+
+-- verify
+connect global myIP, global myVNCPort
+set the SearchRectangle to screenpart(bottomleftquadrant)
+if ImageFound(10, text:"dropped")
+	logsuccess "TouchAction Worked"
+else
+	logerror "TouchAction DID NOT Work"
+end if
+
+set the SearchRectangle to screenpart(reset)
+wd.reset

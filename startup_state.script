@@ -1,0 +1,43 @@
+﻿put RemoteScreenSize()/2 into half_screen
+put ColorAtLocation(half_screen) into color
+log "Color is:" && color
+if color is "0,0,0" -- screen is off
+	Log "screen is not on. Let's turn it on!"
+	wait 2 seconds
+	TypeText PowerButton
+	wait 5 seconds
+	TypeText HomeButton
+	wait 2 seconds
+	drag ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.8)
+	drop ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.2)
+	wait 2 seconds
+else -- screen is on
+	Log "screen is already on"
+	set the SearchRectangle to screenpart(bottomhalf)
+	if imagefound(Text:"swipe", EnhanceLocalContrast:"Yes", WaitFor:8)
+		drag ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.8)
+		drop ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.2)
+		wait 2
+	else if imagefound(Text:"charging", EnhanceLocalContrast:"Yes", WaitFor:8)
+		drag ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.8)
+		drop ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.2)
+		wait 2
+	else if imagefound(Text:"charged", EnhanceLocalContrast:"Yes", WaitFor:8)
+		drag ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.8)
+		drop ((RemoteScreenSize().x)/2,(RemoteScreenSize().y)*.2)
+		wait 2
+	end if
+	set the SearchRectangle to screenpart(reset)
+end if
+TypeText HomeButton
+TypeText HomeButton
+put ColorAtLocation(half_screen) into color1
+if color1 is "0,0,0"
+	logerror "Startup State is OFF"
+else
+	logsuccess "Startup State is ON"
+end if
+
+
+
+

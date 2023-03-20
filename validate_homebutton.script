@@ -1,0 +1,6 @@
+﻿put RemoteScreenSize()/2 into half_screen
+if ColorAtLocation(half_screen) is not "0,0,0"
+	LogSuccess "HomeButton or BackButton was pressed."
+else
+	LogError "HomeButton or BackButton was never pressed."
+end if

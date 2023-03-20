@@ -1,0 +1,127 @@
+﻿# TO RUN SCRIPT: Use _Android_Master.script in _Android.suite
+
+launch.GoogleMaps
+
+try 
+	
+	orientation_test
+	
+catch
+	set recovered to true
+	recover.attention
+	if readtext(the SearchRectangle) contains "Allow"
+		tap "toggle_switch", (image:"toggle_switch",scale: 0.5 to 3 by .25)
+		wait 1
+		typetext backbutton
+		wait 1
+		
+		(*slack global mySlackID, "`Need to set permissions on"&& airtable.get(Devices, Name, global device, Name)&"`"
+		
+		repeat while readtext(the SearchRectangle) contains "Allow"  -- Wait for permissions to get granted.
+			wait 1 minute
+			if the counter is 30
+				put the time + 20 minutes into endWaitTime
+				slack global mySlackID, "`Need to set permissions on"&& airtable.get(Devices, Name, global device, Name)&& "Waiting until"&& endWaitTime&"`"
+			end if
+			if the counter is 50
+				Logerror "Device Orientation DID NOT work. eggSensor needs permissions."
+				set recovered to false
+				exit repeat
+			end if
+		end repeat*)
+		
+	else
+		set recovered to false
+		logerror "Device Orientation DID NOT work."
+	end if
+	
+	if recovered is true
+		orientation_test
+	end if
+	
+end try
+
+to orientation_test
+
+	if GetDeviceOrientation() contains "Landscape"
+		SetDeviceOrientation Portrait
+		wait 5
+	end if
+	
+	//LandscapeRight
+	SetDeviceOrientation LandscapeRight
+	//wait 10
+	if GetDeviceOrientation() is LandscapeRight
+		LogSuccess "Orientation is LandScapeRight"
+	else
+		LogError "Orientation is not LandScapeRight. It is" && GetDeviceOrientation()
+	end if
+	
+	//PortraitUpsideDown
+	
+	try
+		SetDeviceOrientation PortraitUpsideDown
+		//wait 10
+		if GetDeviceOrientation() is PortraitUpsideDown
+			LogSuccess "Orientation is PortraitUpsideDown"
+		else
+			logwarning "Orientation is not PortraitUpsideDown. It is" && GetDeviceOrientation()
+		end if
+	catch
+		logwarning "Orientation is not PortraitUpsideDown. It is" && GetDeviceOrientation()
+	end try
+	
+	
+	//Rotate Left
+	try
+		RotateLeft waitfor:3
+		if GetDeviceOrientation() is LandscapeRight
+			LogSuccess "Orientation is LandScapeRight"
+		else
+			logwarning "RotateLeft: Orientation is not LandScapeRight. It is" && GetDeviceOrientation()
+		end if
+	catch
+		logwarning "RotateLeft: Orientation is not LandScapeRight. It is" && GetDeviceOrientation()
+	end try
+	
+	//Rotate Right
+	try
+		RotateRight waitfor:3
+		if GetDeviceOrientation() is PortraitUpsideDown
+			LogSuccess "Orientation is PortraitUpsideDown"
+		else
+			logwarning "RotateRight: Orientation is not PortraitUpsideDown. It is" && GetDeviceOrientation()
+		end if
+	catch
+		logwarning "RotateRight: Orientation is not PortraitUpsideDown. It is" && GetDeviceOrientation()
+	end try
+	
+	//LandscapeLeft
+	SetDeviceOrientation LandscapeLeft
+	//wait 10
+	if GetDeviceOrientation() is LandscapeLeft
+		LogSuccess "Orientation is LandscapeLeft"
+	else
+		LogError "Orientation is not LandscapeLeft. It is" && GetDeviceOrientation()
+	end if
+	
+	
+	SetDeviceOrientation 3, Portrait
+	
+	//Portrait
+	SetDeviceOrientation Portrait
+	//wait 10
+	if GetDeviceOrientation() is Portrait
+		LogSuccess "Orientation is Portrait"
+	else
+		LogError "Orientation is not Portrait. It is" && GetDeviceOrientation()
+	end if
+	
+end orientation_test
+
+
+
+
+
+
+

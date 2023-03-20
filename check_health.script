@@ -1,0 +1,5 @@
+﻿if jsonvalue(url !"http://[[global gateway_ip]]:[[global gateway_port]]/checkhealth").success is true
+	logsuccess "Health Check Works"
+else
+	logerror "Health Check Does NOT Work"
+end if
